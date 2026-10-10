@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %}Lector de capítulos (HU-13 / spec §7.3).
+
+  Páginas en scroll vertical con lazy loading, índice flotante y navegación
+  por teclado. El progreso guardado es v2 (spec §11.3).
+{% endcomment %}
+
+{% block title %}{{ comic.title }} #{{ chapter.number }} — Devilopers{% endblock %}
+
+{% block content %}
+  <header class="text-center">
+    <p class="text-lg opacity-70">
+      <a href="{% url 'comics:detail' comic.slug %}" class="text-devil-ink">{{ comic.title }}</a>
+    </p>
+    <h1 class="devil-section-title">
+      #{{ chapter.number }}{% if chapter.title %} — {{ chapter.title }}{% endif %}
+    </h1>
+  </header>
+
+  {% if pages %}
+    {# Índice flotante de páginas para saltar (data-target → id de la imagen). #}
+    <nav class="devil-band sticky top-4 z-10 mx-auto my-6 flex max-w-[90%] flex-wrap justify-center gap-2 p-3"
+         aria-label="Índice de páginas" data-page-index>
+      {% for p in pages %}
+        <button type="button"
+                data-goto="page-{{ forloop.counter }}"
+                class="devil-card px-3 py-1 text-base text-devil-ink cursor-pointer">
+          {{ forloop.counter }}
+        </button>
+      {% endfor %}
+    </nav>
+
+    <div class="mx-auto max-w-[720px] space-y-6">
+      {% for p in pages %}
+        <figure id="page-{{ forloop.counter }}" data-page
+                class="devil-card scroll-mt-32 p-3">
+          <img src="{{ p.image.url }}"
+               alt="{{ p.alt_text|default:'Página ' }}{{ forloop.counter }} de {{ chapter.number }}"
+               loading="lazy"
+               width="{{ p.image.width }}" height="{{ p.image.height }}"
+               class="w-full">
+        </figure>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="mt-8 text-center text-lg opacity-70">Este capítulo todavía no tiene páginas.</p>
+  {% endif %}
+
+  {# Navegación entre capítulos: se muestra aunque el capítulo no tenga páginas. #}
+  <nav class="mt-10 flex items-center justify-between text-xl" aria-label="Navegación de capítulos">
+    {% if prev_chapter %}
+      <a href="{% url 'comics:reader' comic.slug prev_chapter.slug %}" class="text-devil-ink">
+        ← #{{ prev_chapter.number }}
+      </a>
+    {% else %}<span></span>{% endif %}
+
+    <a href="{% url 'comics:detail' comic.slug %}" class="text-devil-ink">Índice</a>
+
+    {% if next_chapter %}
+      <a href="{% url 'comics:reader' comic.slug next_chapter.slug %}" class="text-devil-ink">
+        #{{ next_chapter.number }} →
+      </a>
+    {% else %}<span></span>{% endif %}
+  </nav>
+{% endblock %}
+
+{% block scripts %}
+  <script type="module" src="{% static 'js/reader.js' %}"></script>
+{% endblock %}

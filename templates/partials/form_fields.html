@@ -1,0 +1,23 @@
+{% comment %}Campos de un formulario de Django, con los estilos del portal.
+
+  Los errores se muestran siempre con el mismo tono; no se distinguen tipos
+  para no filtrar información al visitante.
+{% endcomment %}
+{% if form.non_field_errors %}
+  <div class="devil-band border-l-4 border-l-devil-accent p-3 text-lg">
+    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+  </div>
+{% endif %}
+
+{% for field in form %}
+  <div>
+    <label for="{{ field.id_for_label }}" class="block text-lg">{{ field.label }}</label>
+    {{ field }}
+    {% if field.help_text %}
+      <p class="mt-1 text-sm opacity-70">{{ field.help_text|safe }}</p>
+    {% endif %}
+    {% for error in field.errors %}
+      <p class="devil-accent mt-1 text-base">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endfor %}

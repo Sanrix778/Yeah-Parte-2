@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% comment %}Perfil del usuario (HU-11). Campos de auth que no se editan aquí.{% endcomment %}
+
+{% block title %}Mi perfil — Devilopers{% endblock %}
+
+{% block content %}
+  <h1 class="devil-section-title">{{ user.get_display_name }}</h1>
+  <p class="mt-2 text-lg opacity-70">@{{ user.username }} · desde {{ user.created_at|date:"M Y" }}</p>
+
+  <div class="mt-8 flex flex-col gap-8 md:flex-row">
+    <div class="shrink-0">
+      {% if user.avatar %}
+        <img src="{{ user.avatar.url }}" alt="Avatar de {{ user.get_display_name }}"
+             class="devil-card h-40 w-40 rounded-full object-cover">
+      {% else %}
+        <div class="devil-card flex h-40 w-40 items-center justify-center rounded-full text-5xl">
+          {{ user.get_display_name|first|upper }}
+        </div>
+      {% endif %}
+
+      {% if user.participations_count %}
+        <p class="mt-4 text-center text-lg">
+          Participó en {{ user.participations_count }}
+          {% if user.participations_count == 1 %}juego{% else %}juegos{% endif %}
+        </p>
+      {% endif %}
+    </div>
+
+    <form method="post" enctype="multipart/form-data"
+          class="devil-band flex-1 space-y-4 p-6">
+      {% csrf_token %}
+      {% include "partials/form_fields.html" with form=form %}
+      <button type="submit"
+              class="devil-card px-5 py-3 text-xl text-devil-ink cursor-pointer">Guardar</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% comment %}Card de juego — spec §4.3.
+
+  Miniatura cuadrada + título manuscrito debajo, a menos de 16px.
+  El orden en la home lo define Game.order (editorial, no cronológico).
+{% endcomment %}
+{% comment %}Parámetros: g (Game).{% endcomment %}
+<article class="devil-card w-[220px] p-3">
+  <a href="{% url 'games:detail' g.slug %}" class="block no-underline">
+    <img
+      src="{{ g.card_image.url }}"
+      alt="Portada de {{ g.title }}"
+      class="devil-thumb w-full"
+      loading="lazy"
+      width="220" height="220">
+    <h3 class="mt-3 text-2xl leading-tight text-devil-ink">{{ g.title }}</h3>
+  </a>
+
+  <p class="mt-1 flex items-center gap-2 text-base">
+    <span class="opacity-70">{{ g.category.name }}</span>
+    {% if g.status == 'released' %}
+      <span class="devil-accent">Publicado</span>
+    {% elif g.status == 'upcoming' %}
+      <span class="opacity-70">Próximamente</span>
+    {% endif %}
+  </p>
+</article>

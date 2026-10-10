@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% comment %}Registro (HU-09). El login acepta email o username.{% endcomment %}
+
+{% block title %}Crear cuenta — Devilopers{% endblock %}
+
+{% block content %}
+  <h1 class="devil-section-title">Crear cuenta</h1>
+
+  <form method="post" class="devil-band mt-6 max-w-[480px] space-y-4 p-6">
+    {% csrf_token %}
+    {% include "partials/form_fields.html" with form=form %}
+    <button type="submit"
+            class="devil-card w-full px-5 py-3 text-xl text-devil-ink cursor-pointer">
+      Registrarme
+    </button>
+  </form>
+
+  <p class="mt-4 text-lg">
+    ¿Ya tenés cuenta? <a href="{% url 'accounts:login' %}" class="text-devil-ink underline">Entrá</a>.
+  </p>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %}Detalle de juego con tabs (spec §7.2). Un solo HTML; JS solo cambia la
+  visibilidad y la URL usa ?tab=.{% endcomment %}
+
+{% block title %}{{ game.title }} — Devilopers{% endblock %}
+{% block meta_description %}{{ game.meta_description|default:game.tagline|default:game.about|truncatechars:160 }}{% endblock %}
+
+{% block content %}
+  <article>
+    {# --- Cabecera --- #}
+    <header class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+      <div>
+        <h1 class="devil-section-title">{{ game.title }}</h1>
+        <p class="mt-2 text-xl opacity-80">{{ game.tagline }}</p>
+        <p class="mt-1 text-lg opacity-70">
+          {{ game.category.name }} · {{ game.get_platform_display }} · {{ game.get_status_display }}
+        </p>
+      </div>
+      {% if game.external_url %}
+        <a href="{{ game.external_url }}" rel="noopener noreferrer" target="_blank"
+           class="devil-card shrink-0 px-6 py-3 text-2xl text-devil-ink no-underline">Jugar</a>
+      {% endif %}
+    </header>
+
+    {# --- Tabs: enlaces ?tab=, JS solo cambia la visibilidad --- #}
+    <div class="mt-8 flex flex-wrap gap-2" role="tablist" aria-label="Secciones del juego">
+      {% for key, label in game_tabs %}
+        <a href="?tab={{ key }}"
+           data-tab-btn="{{ key }}"
+           role="tab"
+           aria-selected="{% if tab == key %}true{% else %}false{% endif %}"
+           class="devil-card px-4 py-2 text-xl no-underline {% if tab == key %}devil-accent{% endif %}">
+          {{ label }}
+        </a>
+      {% endfor %}
+    </div>
+
+    {# --- Paneles --- #}
+    <section id="tab-info" data-tab-panel="info" {% if tab != 'info' %}hidden{% endif %} class="mt-8">
+      {% if game.cover_image %}
+        <img src="{{ game.cover_image.url }}" alt="Portada de {{ game.title }}"
+             class="devil-card w-full max-w-[520px] p-3">
+      {% endif %}
+
+      <h2 class="devil-section-title mt-8">De qué trata</h2>
+      <div class="mt-2 max-w-[70ch] text-xl">{{ game.about|linebreaks }}</div>
+
+      {% if game.origin %}
+        {# `origin` es parte de la identidad del equipo: va destacado (spec §7.2). #}
+        <blockquote class="devil-band mt-6 border-l-4 border-l-devil-accent p-6 text-2xl">
+          {{ game.origin|linebreaks }}
+        </blockquote>
+      {% endif %}
+
+      <dl class="mt-8 grid max-w-[70ch] grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-lg">
+        <dt class="opacity-70">Categoría</dt><dd>{{ game.category.name }}</dd>
+        <dt class="opacity-70">Plataforma</dt><dd>{{ game.get_platform_display }}</dd>
+        {% if game.engine %}<dt class="opacity-70">Motor</dt><dd>{{ game.engine }}</dd>{% endif %}
+        {% if game.released_at %}
+          <dt class="opacity-70">Salida</dt><dd>{{ game.released_at|date:"d/m/Y" }}</dd>
+        {% endif %}
+      </dl>
+    </section>
+
+    <section id="tab-characters" data-tab-panel="characters"
+             {% if tab != 'characters' %}hidden{% endif %} class="mt-8">
+      {% if characters %}
+        <div class="flex flex-wrap gap-4">
+          {% for c in characters %}
+            <article class="devil-card w-[220px] p-3">
+              {% if c.portrait %}
+                <img src="{{ c.portrait.url }}" alt="Retrato de {{ c.name }}"
+                     class="devil-thumb w-full" loading="lazy" width="220" height="220">
+              {% else %}
+                <div class="devil-thumb w-full" style="background-color: {{ c.color }}"></div>
+              {% endif %}
+              <h3 class="mt-3 text-2xl">{{ c.name }}</h3>
+              {% if c.role %}<p class="devil-accent text-lg">{{ c.role }}</p>{% endif %}
+              {% if c.description %}
+                <p class="mt-1 text-base opacity-80">{{ c.description }}</p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-lg opacity-70">Este juego todavía no tiene personajes cargados.</p>
+      {% endif %}
+    </section>
+
+    <section id="tab-guide" data-tab-panel="guide"
+             {% if tab != 'guide' %}hidden{% endif %} class="mt-8">
+      {% if sections %}
+        <ul class="list-inside list-disc text-xl">
+          {% for s in sections %}
+            <li>
+              <a href="{% url 'games:walkthrough_detail' game.slug s.slug %}"
+                 class="text-devil-ink">{% if not s.is_public %}<span class="opacity-50">🔒 </span>{% endif %}{{ s.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-lg opacity-70">La guía está en construcción.</p>
+      {% endif %}
+    </section>
+
+    <section id="tab-team" data-tab-panel="team"
+             {% if tab != 'team' %}hidden{% endif %} class="mt-8">
+      {% if participants %}
+        {# Créditos agrupados por rol (HU-08). #}
+        {% regroup participants by role as roles %}
+        {% for role, items in roles %}
+          <h2 class="devil-section-title mt-6">{{ role }}</h2>
+          <ul class="mt-2 text-xl">
+            {% for p in items %}
+              <li>
+                {% if p.user %}<a href="{% url 'accounts:profile' %}" class="text-devil-ink">{{ p.display_name }}</a>
+                {% else %}{{ p.display_name }}{% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      {% else %}
+        <p class="text-lg opacity-70">Todavía no cargamos los créditos.</p>
+      {% endif %}
+    </section>
+  </article>
+{% endblock %}
+
+{% block scripts %}
+  <script type="module" src="{% static 'js/tabs.js' %}"></script>
+{% endblock %}

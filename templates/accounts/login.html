@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% comment %}Login (HU-10). El mismo mensaje de error para email y username: esto es
+  intencional, evita enumeración de cuentas (spec §8).{% endcomment %}
+
+{% block title %}Iniciar sesión — Devilopers{% endblock %}
+
+{% block content %}
+  <h1 class="devil-section-title">Entrar</h1>
+
+  <form method="post" class="devil-band mt-6 max-w-[480px] space-y-4 p-6">
+    {% csrf_token %}
+    {% include "partials/form_fields.html" with form=form %}
+    <button type="submit"
+            class="devil-card w-full px-5 py-3 text-xl text-devil-ink cursor-pointer">
+      Entrar
+    </button>
+  </form>
+
+  <p class="mt-4 text-lg">
+    ¿No tenés cuenta? <a href="{% url 'accounts:signup' %}" class="text-devil-ink underline">Registrate</a>.
+  </p>
+{% endblock %}

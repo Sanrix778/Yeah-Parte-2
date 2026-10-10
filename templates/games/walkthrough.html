@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% comment %}Índice de la guía de un juego (HU-07).{% endcomment %}
+
+{% block title %}Guía de {{ game.title }} — Devilopers{% endblock %}
+
+{% block content %}
+  <h1 class="devil-section-title">Guía · {{ game.title }}</h1>
+
+  {% if sections %}
+    <ul class="mt-6 list-inside list-disc text-xl">
+      {% for s in sections %}
+        <li class="mb-2">
+          <a href="{% url 'games:walkthrough_detail' game.slug s.slug %}" class="text-devil-ink">
+            {% if not s.is_public %}<span class="opacity-50" title="En construcción">🔒 </span>{% endif %}
+            {{ s.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="mt-6 text-lg opacity-70">La guía está en construcción.</p>
+  {% endif %}
+
+  <p class="mt-8"><a href="{{ game.get_absolute_url }}" class="text-xl text-devil-ink">← Volver al juego</a></p>
+{% endblock %}

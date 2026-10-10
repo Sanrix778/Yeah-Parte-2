@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Tokens del portal Devilopers — spec §4.1.
+   El diseño oscuro/manuscrito es normativo: no hardcodear hex en templates.
+   --------------------------------------------------------------------------- */
+@theme {
+  --color-devil-bg: #3d3d3d;
+  --color-devil-panel: #1f1f1f;
+  --color-devil-card: #0d0d0d;
+  --color-devil-ink: #f5f5f5;
+  --color-devil-accent: #9e1717;
+  --color-devil-accent-dark: #7a1010;
+  --color-devil-line: #0a0a0a;
+
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", "Comic Sans MS",
+    "Marker Felt", cursive;
+  --font-logo: "Caveat", cursive;
+}
+
+/* Base ------------------------------------------------------------------- */
+body {
+  background-color: var(--color-devil-bg);
+  color: var(--color-devil-ink);
+  font-family: var(--font-hand);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* Logo del header: grande e inclinado (spec §4.2). */
+.devil-logo {
+  font-family: var(--font-logo);
+  font-size: clamp(3.5rem, 9vw, 7.5rem);
+  line-height: 0.85;
+  transform: rotate(-7deg);
+  transform-origin: left center;
+  width: max-content;
+  letter-spacing: -0.02em;
+}
+
+/* Títulos de sección manuscritos (spec §4.3). */
+.devil-section-title {
+  font-family: var(--font-logo);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1;
+}
+
+/* Buscador redondeado del header (spec §4.2). */
+.devil-search {
+  width: 100%;
+  max-width: 500px;
+  height: 68px;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  color: #111111;
+  border: 2px solid var(--color-devil-line);
+  padding: 0 1.25rem;
+  font-family: var(--font-hand);
+  font-size: 1.25rem;
+}
+.devil-search:focus {
+  outline: 3px solid var(--color-devil-accent);
+  outline-offset: 2px;
+}
+
+/* Cards oscuras con contorno grueso (spec §4.1). */
+.devil-card {
+  background-color: var(--color-devil-card);
+  border: 2px solid var(--color-devil-line);
+  border-radius: 1.5rem;
+}
+
+/* Bands de sección (Games / Comics). */
+.devil-band {
+  background-color: var(--color-devil-panel);
+  border-radius: 1.5rem;
+}
+
+.devil-accent {
+  color: var(--color-devil-accent);
+}
+
+/* Miniatura cuadrada: evita que la grilla baile al cargar (spec §7.4). */
+.devil-thumb {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 1.25rem;
+}
+
+/* Formularios: campos del admin y de las cuentas con el mismo tono del portal. */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.9rem;
+  border: 2px solid var(--color-devil-line);
+  background-color: var(--color-devil-card);
+  color: var(--color-devil-ink);
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid var(--color-devil-accent);
+  outline-offset: 2px;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #8a8a8a;
+}

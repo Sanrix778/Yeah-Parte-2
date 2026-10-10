@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% comment %}Resultados de búsqueda (HU-03). Funciona sin JS: es un GET simple.{% endcomment %}
+
+{% block title %}{% if q %}“{{ q }}” — Devilopers{% else %}Buscar — Devilopers{% endif %}{% endblock %}
+
+{% block content %}
+  <h1 class="devil-section-title">Buscar</h1>
+
+  {% if not q %}
+    <p class="mt-4 text-lg opacity-70">Escribí algo en el buscador de arriba.</p>
+  {% else %}
+    <p class="mt-4 text-lg opacity-70">Resultados para “{{ q }}”</p>
+
+    {% if games or comics %}
+      {% if games %}
+        <h2 class="devil-section-title mt-8">Games</h2>
+        <div class="mt-4 flex flex-wrap gap-4">
+          {% for g in games %}{% include "components/game_card.html" with g=g %}{% endfor %}
+        </div>
+      {% endif %}
+
+      {% if comics %}
+        <h2 class="devil-section-title mt-8">Comics</h2>
+        <div class="mt-4 flex flex-wrap gap-6">
+          {% for c in comics %}{% include "components/comic_card.html" with c=c %}{% endfor %}
+        </div>
+      {% endif %}
+    {% else %}
+      <p class="mt-4 text-lg">No encontramos nada. Probá con otro nombre.</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}

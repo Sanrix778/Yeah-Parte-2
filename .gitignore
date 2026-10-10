@@ -1,0 +1,30 @@
+.env
+.venv/
+venv/
+
+__pycache__/
+*.py[cod]
+
+db.sqlite3
+db.sqlite3-journal
+
+# Salidas de Tailwind
+static/css/dist/
+
+# media/ = subidas del admin + copias de la semilla.
+# Los ORIGINALES de todas las imágenes viven en Imagenes/ y SÍ están versionados.
+# Las copias se regeneran con: python manage.py setup_seed_assets
+media/*
+
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+.idea/
+.vscode/
+.DS_Store
+
+# Proyecto Django original, ya reemplazado por config/ + apps/.
+# Ver README: se puede borrar entero.
+DevilWeb/

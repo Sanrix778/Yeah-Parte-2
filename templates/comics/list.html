@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% comment %}Listado de cómics (HU-12).{% endcomment %}
+
+{% block title %}Comics — Devilopers{% endblock %}
+
+{% block content %}
+  <h1 class="devil-section-title">Comics</h1>
+
+  {% if comics %}
+    <div class="mt-8 flex flex-wrap gap-6">
+      {% for c in comics %}{% include "components/comic_card.html" with c=c %}{% endfor %}
+    </div>
+  {% else %}
+    <p class="mt-8 text-lg opacity-70">Todavía no hay cómics publicados.</p>
+  {% endif %}
+{% endblock %}

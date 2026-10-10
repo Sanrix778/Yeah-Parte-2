@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load markdown_tags %}
+{% comment %}Sección de la guía.
+
+  El contenido viene del admin como Markdown y lo sanea el filtro `markdownify`
+  (markdown + nh3, ver apps/site/templatetags/markdown_tags.py). El `|safe` de
+  abajo es seguro precisamente porque el filtro ya devolvió HTML limpio.
+{% endcomment %}
+
+{% block title %}{{ section.title }} · {{ section.game.title }} — Devilopers{% endblock %}
+
+{% block content %}
+  <h1 class="devil-section-title">{{ section.title }}</h1>
+  <p class="mt-2 text-xl opacity-70">
+    <a href="{{ section.game.get_absolute_url }}" class="text-devil-ink">{{ section.game.title }}</a>
+  </p>
+
+  {% if section.is_public %}
+    <div class="mt-6 max-w-[70ch] text-xl">{{ section.content|markdownify|safe }}</div>
+  {% else %}
+    <p class="devil-band mt-6 p-6 text-xl">
+      Esta sección está en construcción. Volvé pronto.
+    </p>
+  {% endif %}
+
+  <nav class="mt-10 flex justify-between text-xl" aria-label="Secciones de la guía">
+    {% with all=siblings.all %}
+      {% if all.first and all.first.pk != section.pk %}
+        <a href="{% url 'games:walkthrough_detail' section.game.slug all.first.slug %}"
+           class="text-devil-ink">← {{ all.first.title }}</a>
+      {% endif %}
+    {% endwith %}
+    <a href="{% url 'games:walkthrough' section.game.slug %}" class="text-devil-ink">Índice</a>
+  </nav>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% comment %}Home del portal — spec §7.1.
+
+  Orden de secciones: header, Games (4 cards centradas), Comics (2 cards a la izquierda).
+  El orden de los juegos es editorial (Game.order), no cronológico.
+{% endcomment %}
+
+{% block title %}Devilopers — juegos, personajes y comics{% endblock %}
+
+{% block content %}
+
+  {# --- Sección Games: título centrado, 4 cards en una fila --- #}
+  <section class="devil-band mt-8 px-4 py-8 md:px-8" aria-labelledby="games-title">
+    <h2 id="games-title" class="devil-section-title text-center text-devil-ink">Games</h2>
+
+    {% if games %}
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        {% for g in games %}
+          {% include "components/game_card.html" with g=g %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="mt-8 text-center text-lg opacity-70">
+        Todavía no hay juegos publicados. Volvé pronto.
+      </p>
+    {% endif %}
+  </section>
+
+  {# --- Sección Comics: título a la izquierda, 2 cards --- #}
+  <section class="devil-band mt-8 px-4 py-8 md:px-8" aria-labelledby="comics-title">
+    <h2 id="comics-title" class="devil-section-title text-devil-ink">Comics</h2>
+
+    {% if comics %}
+      <div class="mt-8 flex flex-wrap gap-6">
+        {% for c in comics %}
+          {% include "components/comic_card.html" with c=c %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="mt-8 text-lg opacity-70">Próximamente.</p>
+    {% endif %}
+  </section>
+
+  {# --- CTA --- #}
+  {% if featured_games %}
+    <section class="mt-8" aria-labelledby="featured-title">
+      <h2 id="featured-title" class="devil-section-title text-devil-ink">Destacados</h2>
+      <div class="mt-6 flex flex-wrap gap-4">
+        {% for g in featured_games %}
+          {% include "components/game_card.html" with g=g %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="mt-10 text-center">
+    <a href="{% url 'site:about' %}"
+       class="devil-card inline-block px-6 py-3 text-2xl text-devil-ink no-underline">
+      Conócenos más
+    </a>
+  </section>
+
+{% endblock %}

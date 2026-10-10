@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% comment %}Detalle de cómic: portada + lista de capítulos (HU-12).{% endcomment %}
+
+{% block title %}{{ comic.title }} — Devilopers{% endblock %}
+
+{% block content %}
+  <h1 class="devil-section-title">{{ comic.title }}</h1>
+  {% if comic.tagline %}<p class="mt-2 text-xl opacity-80">{{ comic.tagline }}</p>{% endif %}
+
+  <div class="mt-8 flex flex-col gap-8 md:flex-row">
+    <img src="{{ comic.cover_image.url }}" alt="Portada de {{ comic.title }}"
+         class="devil-card w-full max-w-[360px] p-4">
+
+    <div class="flex-1">
+      {% if comic.description %}
+        <div class="max-w-[70ch] text-xl">{{ comic.description|linebreaks }}</div>
+      {% endif %}
+
+      <h2 class="devil-section-title mt-8">Capítulos</h2>
+      {% if chapters %}
+        <ul class="mt-4 list-inside list-disc text-xl">
+          {% for ch in chapters %}
+            <li class="mb-2">
+              <a href="{% url 'comics:reader' comic.slug ch.slug %}" class="text-devil-ink">
+                #{{ ch.number }}{% if ch.title %} — {{ ch.title }}{% endif %}
+              </a>
+              {% if ch.page_count %}<span class="opacity-60">({{ ch.page_count }} pág.)</span>{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="mt-4 text-lg opacity-70">Este cómic no tiene capítulos publicados todavía.</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

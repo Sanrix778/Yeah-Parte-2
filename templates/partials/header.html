@@ -1,0 +1,68 @@
+{% comment %}Header del portal Devilopers — spec §4.2.
+
+  Tres bloques: logo a la izquierda, buscador centrado, menú + avatar a la derecha.
+  Los iconos del mockup son drawings; si no hay asset, se dibuja un SVG inline.
+{% endcomment %}
+<header class="mx-auto w-full max-w-[1200px] px-4 pt-6 md:px-8">
+  <div class="grid grid-cols-1 items-center gap-4 md:grid-cols-[auto_1fr_auto] md:gap-6">
+
+    {# --- Izquierda: logo --- #}
+    <div>
+      <a href="{% url 'site:home' %}" class="devil-logo block text-devil-ink no-underline">
+        Devilopers
+      </a>
+    </div>
+
+    {# --- Centro: buscador --- #}
+    <div class="order-3 flex justify-center md:order-none">
+      <form action="{% url 'site:search' %}" method="get" role="search" class="w-full flex justify-center">
+        <input
+          type="search"
+          name="q"
+          value="{{ q|default:'' }}"
+          placeholder="Buscar..."
+          aria-label="Buscar juegos y comics"
+          class="devil-search">
+      </form>
+    </div>
+
+    {# --- Derecha: menú + avatar --- #}
+    <div class="order-2 flex items-center justify-end gap-3 md:order-none">
+      <a
+        href="{% url 'site:about' %}"
+        aria-label="Menú"
+        class="devil-card flex h-12 w-12 items-center justify-center no-underline">
+        {# ícono menú: tres líneas dibujadas #}
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="18" x2="20" y2="18"/>
+        </svg>
+      </a>
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'accounts:profile' %}" aria-label="Mi perfil"
+           class="devil-card flex h-12 w-12 items-center justify-center overflow-hidden rounded-full no-underline">
+          {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="Avatar de {{ user.get_display_name }}"
+                 class="h-full w-full object-cover">
+          {% else %}
+            <span class="text-xl">{{ user.get_display_name|first|upper }}</span>
+          {% endif %}
+        </a>
+        <form action="{% url 'accounts:logout' %}" method="post" class="hidden">
+          {% csrf_token %}<button type="submit">Salir</button>
+        </form>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" aria-label="Iniciar sesión"
+           class="devil-card flex h-12 w-12 items-center justify-center rounded-full no-underline">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5Z"/>
+          </svg>
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</header>
